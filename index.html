@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Controle Financeiro</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #f4f6f8;
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.container {
+  background: white;
+  padding: 20px;
+  width: 400px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+input, select, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+button {
+  background: green;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Controle Financeiro</h2>
+
+<input type="date" id="data">
+
+<select id="tipo" onchange="trocarTipo()">
+  <option value="">Tipo</option>
+  <option value="Despesa">Despesa</option>
+  <option value="Receita">Receita</option>
+</select>
+
+<select id="categoriaDespesa">
+  <option>Alimentação</option>
+  <option>Transporte</option>
+  <option>Moradia</option>
+</select>
+
+<select id="categoriaReceita" style="display:none;">
+  <option>Salário</option>
+  <option>Freelance</option>
+  <option>Investimento</option>
+</select>
+
+<input type="text" id="descricao" placeholder="Descrição">
+<input type="number" id="parcelas" placeholder="Parcelas (opcional)">
+<input type="number" id="valor" placeholder="Valor">
+
+<button onclick="salvar()">Salvar</button>
+
+</div>
+
+<script>
+
+const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbyEjKYND3VbIFUC3w_ApiI2YfCR1_uK6Z4atjDUZL6p-Cw6UabHTuwfM5J4CzQUb-1cZw/exec";
+
+function trocarTipo() {
+  const tipo = document.getElementById("tipo").value;
+
+  document.getElementById("categoriaDespesa").style.display =
+    tipo === "Despesa" ? "block" : "none";
+
+  document.getElementById("categoriaReceita").style.display =
+    tipo === "Receita" ? "block" : "none";
+}
+
+async function salvar() {
+
+  const tipo = document.getElementById("tipo").value;
+
+  const categoria = tipo === "Despesa"
+    ? document.getElementById("categoriaDespesa").value
+    : document.getElementById("categoriaReceita").value;
+
+  // 🔥 garante data sempre preenchida
+  const rawDate = document.getElementById("data").value;
+
+  const dataFinal = rawDate
+    ? rawDate
+    : new Date().toISOString().split("T")[0];
+
+  const data = {
+    token: "Desafio2026",
+    data: dataFinal,
+    tipo: tipo,
+    categoria: categoria,
+    descricao: document.getElementById("descricao").value,
+    parcelas: document.getElementById("parcelas").value || 1,
+    valor: document.getElementById("valor").value
+  };
+
+  try {
+    const res = await fetch(URL_SCRIPT, {
+      method: "POST",
+      body: JSON.stringify(data)
+    });
+
+    const text = await res.text();
+
+    if (text === "OK") {
+      alert("Salvo com sucesso!");
+    } else {
+      alert("Erro: " + text);
+    }
+
+  } catch (err) {
+    alert("Erro ao enviar: " + err);
+  }
+}
+
+</script>
+
+</body>
+</html>
