@@ -13,26 +13,26 @@
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
-    padding: 2rem 1rem;
+    padding: 1rem 0.5rem;
   }
   .card {
     background: #fff;
     width: 100%;
     max-width: 440px;
-    border-radius: 20px;
+    border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0,0,0,0.4);
   }
   .header {
     background: #1e3a8a;
-    padding: 1.25rem 1.5rem;
+    padding: 1.1rem 1.25rem;
   }
   .header h1 { color: #fff; font-size: 17px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; }
   .header p  { color: #93c5fd; font-size: 12px; margin-top: 3px; text-transform: uppercase; letter-spacing: .4px; }
-  .body { padding: 1.5rem; }
-  .tipo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.25rem; }
+  .body { padding: 1.1rem 1.25rem; }
+  .tipo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1rem; }
   .tipo-btn {
-    padding: 10px;
+    padding: 9px;
     border-radius: 10px;
     border: 1.5px solid #e5e7eb;
     background: #f9fafb;
@@ -48,8 +48,8 @@
   }
   .tipo-btn.active-despesa { background: #fef2f2; border-color: #fca5a5; color: #b91c1c; }
   .tipo-btn.active-receita { background: #f0fdf4; border-color: #86efac; color: #15803d; }
-  .divider { height: 1px; background: #f3f4f6; margin: 0 0 1.25rem; }
-  .field { margin-bottom: 1rem; }
+  .divider { height: 1px; background: #f3f4f6; margin: 0 0 1rem; }
+  .field { margin-bottom: 0.85rem; }
   .field label {
     display: flex;
     align-items: center;
@@ -59,9 +59,9 @@
     color: #9ca3af;
     text-transform: uppercase;
     letter-spacing: .5px;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
   }
-  .field input, .field select {
+  .field input {
     width: 100%;
     padding: 10px 12px;
     border: 1.5px solid #e5e7eb;
@@ -74,26 +74,62 @@
     -webkit-appearance: none;
     appearance: none;
   }
-  .field input:focus, .field select:focus { border-color: #3b82f6; }
-  .select-wrapper {
-    position: relative;
+  .field input:focus { border-color: #3b82f6; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cat-block { display: none; }
+  .cat-block.visible { display: block; }
+
+  /* Autocomplete */
+  .autocomplete-wrapper { position: relative; }
+  .autocomplete-wrapper input {
+    width: 100%;
+    padding: 10px 36px 10px 12px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #111827;
+    background: #fff;
+    outline: none;
+    transition: border-color .15s;
+    -webkit-appearance: none;
+    appearance: none;
   }
-  .select-wrapper select {
-    padding-right: 36px;
-  }
-  .select-wrapper::after {
-    content: "▼";
-    font-size: 10px;
-    color: #9ca3af;
+  .autocomplete-wrapper input:focus { border-color: #3b82f6; }
+  .autocomplete-arrow {
     position: absolute;
     right: 13px;
     top: 50%;
     transform: translateY(-50%);
+    font-size: 10px;
+    color: #9ca3af;
     pointer-events: none;
   }
-  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .cat-block { display: none; }
-  .cat-block.visible { display: block; }
+  .autocomplete-list {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    max-height: 180px;
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+  .autocomplete-list.open { display: block; }
+  .autocomplete-item {
+    padding: 9px 12px;
+    font-size: 14px;
+    color: #111827;
+    cursor: pointer;
+  }
+  .autocomplete-item:hover, .autocomplete-item.selected { background: #eff6ff; color: #1d4ed8; }
+  .autocomplete-item:first-child { border-radius: 8px 8px 0 0; }
+  .autocomplete-item:last-child  { border-radius: 0 0 8px 8px; }
+
+  /* Parcelas */
   .parcelas-wrapper {
     display: flex;
     align-items: center;
@@ -104,7 +140,7 @@
   }
   .parcelas-wrapper:focus-within { border-color: #3b82f6; }
   .parcelas-btn {
-    width: 38px;
+    width: 36px;
     flex-shrink: 0;
     background: #f9fafb;
     border: none;
@@ -128,10 +164,44 @@
     padding: 10px 4px;
     flex: 1;
     font-size: 14px;
+    color: #111827;
+    outline: none;
     -moz-appearance: textfield;
+    min-width: 0;
   }
   #parcelas::-webkit-outer-spin-button,
   #parcelas::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  /* Valor */
+  .valor-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color .15s;
+  }
+  .valor-wrapper:focus-within { border-color: #3b82f6; }
+  .valor-prefix {
+    padding: 0 0 0 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+    white-space: nowrap;
+    user-select: none;
+  }
+  #valor {
+    border: none;
+    border-radius: 0;
+    padding: 10px 12px 10px 6px;
+    flex: 1;
+    font-size: 14px;
+    color: #111827;
+    outline: none;
+    min-width: 0;
+    background: #fff;
+  }
+
   .btn {
     width: 100%;
     padding: 13px;
@@ -147,7 +217,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
     transition: background .15s;
   }
   .btn:hover { background: #1d4ed8; }
@@ -166,12 +235,8 @@
 
   <div class="body">
     <div class="tipo-row">
-      <button class="tipo-btn active-despesa" id="btnDespesa" onclick="setTipo('Despesa')">
-        ↓ Despesa
-      </button>
-      <button class="tipo-btn" id="btnReceita" onclick="setTipo('Receita')">
-        ↑ Receita
-      </button>
+      <button class="tipo-btn active-despesa" id="btnDespesa" onclick="setTipo('Despesa')">↓ Despesa</button>
+      <button class="tipo-btn" id="btnReceita" onclick="setTipo('Receita')">↑ Receita</button>
     </div>
 
     <div class="divider"></div>
@@ -184,31 +249,10 @@
     <div class="cat-block visible" id="catDespesa">
       <div class="field">
         <label>Categoria</label>
-        <div class="select-wrapper">
-          <select id="categoriaDespesa">
-            <option>Almoço semana</option>
-            <option>Aluguel</option>
-            <option>Apartamento</option>
-            <option>Barbeiro</option>
-            <option>Convênio médico</option>
-            <option>Despesas auto</option>
-            <option>Empréstimo</option>
-            <option>Farmácia</option>
-            <option>Faxineira</option>
-            <option>Financiamento apto</option>
-            <option>IPTU</option>
-            <option>Luz/Água/Gás/Condomínio</option>
-            <option>Marcado</option>
-            <option>Presentes</option>
-            <option>Restaurante/Delivery</option>
-            <option>Salário MX</option>
-            <option>Sandy e Marley</option>
-            <option>Seguro de vida</option>
-            <option>TV/Celular/Internet</option>
-            <option>Uber/99/Táxi</option>
-            <option>Vestuário</option>
-            <option>Vinícius</option>
-          </select>
+        <div class="autocomplete-wrapper" id="wrapperDespesa">
+          <input type="text" id="inputDespesa" placeholder="Selecione ou digite..." autocomplete="off">
+          <span class="autocomplete-arrow">▼</span>
+          <div class="autocomplete-list" id="listaDespesa"></div>
         </div>
       </div>
     </div>
@@ -216,11 +260,10 @@
     <div class="cat-block" id="catReceita">
       <div class="field">
         <label>Categoria</label>
-        <div class="select-wrapper">
-          <select id="categoriaReceita">
-            <option>Aluguel</option>
-            <option>Salário</option>
-          </select>
+        <div class="autocomplete-wrapper" id="wrapperReceita">
+          <input type="text" id="inputReceita" placeholder="Selecione ou digite..." autocomplete="off">
+          <span class="autocomplete-arrow">▼</span>
+          <div class="autocomplete-list" id="listaReceita"></div>
         </div>
       </div>
     </div>
@@ -235,13 +278,16 @@
         <label>Parcelas</label>
         <div class="parcelas-wrapper">
           <button class="parcelas-btn" id="btnMenos" onclick="alterarParcelas(-1)" disabled>−</button>
-          <input type="number" id="parcelas" min="0" value="1" readonly>
+          <input type="tel" inputmode="numeric" id="parcelas" value="1" min="1">
           <button class="parcelas-btn" onclick="alterarParcelas(1)">+</button>
         </div>
       </div>
       <div class="field">
         <label>Valor</label>
-        <input type="tel" id="valor" inputmode="decimal">
+        <div class="valor-wrapper">
+          <span class="valor-prefix">R$</span>
+          <input type="tel" inputmode="numeric" id="valor" placeholder="0,00">
+        </div>
       </div>
     </div>
 
@@ -255,6 +301,15 @@
   const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbyEjKYND3VbIFUC3w_ApiI2YfCR1_uK6Z4atjDUZL6p-Cw6UabHTuwfM5J4CzQUb-1cZw/exec";
   let tipoAtual = "Despesa";
 
+  const categoriasDespesa = [
+    "Almoço semana","Aluguel","Apartamento","Barbeiro","Convênio médico",
+    "Despesas auto","Empréstimo","Farmácia","Faxineira","Financiamento apto",
+    "IPTU","Luz/Água/Gás/Condomínio","Marcado","Presentes","Restaurante/Delivery",
+    "Salário MX","Sandy e Marley","Seguro de vida","TV/Celular/Internet",
+    "Uber/99/Táxi","Vestuário","Vinícius"
+  ];
+  const categoriasReceita = ["Salário","Aluguel"];
+
   document.getElementById("data").value = new Date().toISOString().split("T")[0];
 
   function setTipo(t) {
@@ -265,53 +320,15 @@
     document.getElementById("catReceita").className = "cat-block" + (t === "Receita" ? " visible" : "");
   }
 
-  function alterarParcelas(delta) {
-    const input = document.getElementById("parcelas");
-    const novoValor = Math.max(0, parseInt(input.value) + delta);
-    input.value = novoValor;
-    document.getElementById("btnMenos").disabled = novoValor <= 0;
-  }
+  function setupAutocomplete(inputId, listaId, opcoes) {
+    const input = document.getElementById(inputId);
+    const lista = document.getElementById(listaId);
+    let selectedIndex = -1;
 
-  function validarValor(v) { return /^\d+(,\d{1,2})?$/.test(v); }
-
-  function setBtnState(state) {
-    const btn = document.getElementById("btnSalvar");
-    const lbl = document.getElementById("btnLabel");
-    if (state === "sending") { btn.className = "btn sending"; lbl.textContent = "ENVIANDO..."; }
-    else if (state === "ok")  { btn.className = "btn ok";  lbl.textContent = "SALVO!"; setTimeout(() => setBtnState("idle"), 2500); }
-    else if (state === "err") { btn.className = "btn err"; lbl.textContent = "ERRO AO SALVAR"; setTimeout(() => setBtnState("idle"), 2500); }
-    else { btn.className = "btn"; lbl.textContent = "SALVAR"; }
-  }
-
-  async function salvar() {
-    const valorTexto = document.getElementById("valor").value.trim();
-    if (!validarValor(valorTexto)) { alert("Valor inválido. Use: 10 ou 10,50"); return; }
-    const valor = parseFloat(valorTexto.replace(",", "."));
-    if (valor < 0) { alert("Valor não pode ser negativo"); return; }
-    const parcelas = parseInt(document.getElementById("parcelas").value);
-    const categoria = tipoAtual === "Despesa"
-      ? document.getElementById("categoriaDespesa").value
-      : document.getElementById("categoriaReceita").value;
-    const payload = {
-      token: "Desafio2026",
-      data: document.getElementById("data").value,
-      tipo: tipoAtual,
-      categoria,
-      descricao: document.getElementById("descricao").value,
-      parcelas,
-      valor
-    };
-    setBtnState("sending");
-    try {
-      const res = await fetch(URL_SCRIPT, { method: "POST", body: JSON.stringify(payload) });
-      const text = await res.text();
-      setBtnState(text === "OK" ? "ok" : "err");
-      if (text !== "OK") console.error("Resposta:", text);
-    } catch (e) {
-      setBtnState("err");
-    }
-  }
-</script>
-
-</body>
-</html>
+    function renderLista(filtro) {
+      const termo = filtro.toLowerCase();
+      const filtradas = opcoes.filter(o => o.toLowerCase().includes(termo));
+      lista.innerHTML = "";
+      selectedIndex = -1;
+      if (filtradas.length === 0) { lista.classList.remove("open"); return; }
+    
