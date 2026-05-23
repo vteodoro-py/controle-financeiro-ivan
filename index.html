@@ -8,7 +8,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: Arial, sans-serif;
-    background: #0f172a;
+    background: #F5F0E8;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -23,13 +23,13 @@
     box-shadow: 0 20px 60px rgba(0,0,0,0.4);
   }
   .header {
-    background: #1e3a8a;
-    padding: 0.75rem 1.25rem;
+    background: #202E57;
+    padding: 1.5rem 1.25rem;
   }
   .header h1 { color: #fff; font-size: 17px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; }
-  .header p  { color: #93c5fd; font-size: 12px; margin-top: 2px; text-transform: uppercase; letter-spacing: .4px; }
-  .body { padding: 0.75rem 1.25rem; }
-  .tipo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 0.7rem; }
+  .header p  { color: #A8B8D8; font-size: 12px; margin-top: 2px; text-transform: uppercase; letter-spacing: .4px; }
+  .body { padding: 1.5rem 1.25rem; }
+  .tipo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.2rem; }
   .tipo-btn {
     padding: 8px;
     border-radius: 10px;
@@ -47,8 +47,8 @@
   }
   .tipo-btn.active-despesa { background: #fef2f2; border-color: #fca5a5; color: #b91c1c; }
   .tipo-btn.active-receita { background: #f0fdf4; border-color: #86efac; color: #15803d; }
-  .divider { height: 1px; background: #f3f4f6; margin: 0 0 0.7rem; }
-  .field { margin-bottom: 0.6rem; }
+  .divider { height: 1px; background: #f3f4f6; margin: 0 0 1.2rem; }
+  .field { margin-bottom: 1rem; }
   .field label {
     display: flex;
     align-items: center;
@@ -62,7 +62,7 @@
   }
   .field input {
     width: 100%;
-    padding: 8px 12px;
+    padding: 11px 12px;
     border: 1.5px solid #e5e7eb;
     border-radius: 10px;
     font-size: 14px;
@@ -81,7 +81,7 @@
   .autocomplete-wrapper { position: relative; }
   .autocomplete-wrapper input {
     width: 100%;
-    padding: 8px 36px 8px 12px;
+    padding: 11px 36px 11px 12px;
     border: 1.5px solid #e5e7eb;
     border-radius: 10px;
     font-size: 14px;
@@ -118,12 +118,12 @@
   }
   .autocomplete-list.open { display: block; }
   .autocomplete-item {
-    padding: 8px 12px;
+    padding: 11px 12px;
     font-size: 14px;
     color: #111827;
     cursor: pointer;
   }
-  .autocomplete-item:hover, .autocomplete-item.selected { background: #eff6ff; color: #1d4ed8; }
+  .autocomplete-item:hover, .autocomplete-item.selected { background: #eff6ff; color: #2A3E72; }
   .autocomplete-item:first-child { border-radius: 8px 8px 0 0; }
   .autocomplete-item:last-child  { border-radius: 0 0 8px 8px; }
 
@@ -145,7 +145,7 @@
     color: #6b7280;
     cursor: pointer;
     padding: 0;
-    height: 38px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -158,7 +158,7 @@
     border: none;
     border-radius: 0;
     text-align: center;
-    padding: 8px 4px;
+    padding: 11px 4px;
     flex: 1;
     font-size: 14px;
     color: #111827;
@@ -189,7 +189,7 @@
   #valor {
     border: none;
     border-radius: 0;
-    padding: 8px 12px 8px 6px;
+    padding: 11px 12px 11px 6px;
     flex: 1;
     font-size: 14px;
     color: #111827;
@@ -204,7 +204,7 @@
     margin-top: 4px;
     border: none;
     border-radius: 12px;
-    background: #1e3a8a;
+    background: #202E57;
     color: #fff;
     font-size: 15px;
     font-weight: 700;
@@ -215,7 +215,7 @@
     justify-content: center;
     transition: background .15s;
   }
-  .btn:hover { background: #1d4ed8; }
+  .btn:hover { background: #2A3E72; }
   .btn.sending { background: #6b7280; pointer-events: none; }
   .btn.ok  { background: #15803d; }
   .btn.err { background: #b91c1c; }
