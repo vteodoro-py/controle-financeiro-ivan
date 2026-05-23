@@ -2,13 +2,13 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Financeiro</title>
+<title>Controle Financeiro</title>
 
 <style>
 body {
   margin: 0;
-  font-family: Arial;
-  background: #0f172a;
+  font-family: Arial, sans-serif;
+  background: #0b1220;
   display: flex;
   justify-content: center;
   padding: 30px;
@@ -16,22 +16,22 @@ body {
 
 .container {
   background: #ffffff;
-  width: 420px;
-  border-radius: 16px;
+  width: 450px;
+  border-radius: 14px;
   padding: 25px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
 
 h2 {
-  margin: 0 0 20px;
   text-align: center;
-  color: #0f172a;
+  margin-bottom: 20px;
+  color: #111827;
 }
 
 label {
   font-size: 12px;
   color: #555;
-  margin-top: 10px;
+  margin-top: 12px;
   display: block;
 }
 
@@ -41,12 +41,19 @@ input, select {
   margin-top: 5px;
   border-radius: 10px;
   border: 1px solid #ddd;
-  outline: none;
   font-size: 14px;
+  outline: none;
 }
 
 input:focus, select:focus {
-  border-color: #6366f1;
+  border-color: #2563eb;
+}
+
+/* remove setas do number */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 button {
@@ -54,26 +61,15 @@ button {
   padding: 14px;
   margin-top: 20px;
   border: none;
-  border-radius: 12px;
-  background: #6366f1;
+  border-radius: 10px;
+  background: #2563eb;
   color: white;
-  font-size: 16px;
+  font-size: 15px;
   cursor: pointer;
-  transition: 0.2s;
 }
 
 button:hover {
-  background: #4f46e5;
-}
-
-.card {
-  background: #f1f5f9;
-  padding: 12px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  text-align: center;
-  font-size: 13px;
-  color: #334155;
+  background: #1d4ed8;
 }
 </style>
 </head>
@@ -82,11 +78,7 @@ button:hover {
 
 <div class="container">
 
-<h2>💰 Controle Financeiro</h2>
-
-<div class="card">
-Sistema conectado ao Google Sheets
-</div>
+<h2>Controle Financeiro</h2>
 
 <label>Data</label>
 <input type="date" id="data">
@@ -116,18 +108,21 @@ Sistema conectado ao Google Sheets
 <input type="text" id="descricao">
 
 <label>Parcelas</label>
-<input type="number" id="parcelas" value="1">
+<input type="number" id="parcelas" min="1" value="1">
 
 <label>Valor</label>
-<input type="number" id="valor">
+<input type="text" id="valor" placeholder="0,00">
 
-<button onclick="salvar()">Salvar lançamento</button>
+<button onclick="salvar()">Salvar</button>
 
 </div>
 
 <script>
 
 const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbyEjKYND3VbIFUC3w_ApiI2YfCR1_uK6Z4atjDUZL6p-Cw6UabHTuwfM5J4CzQUb-1cZw/exec";
+
+// data padrão hoje
+document.getElementById("data").value = new Date().toISOString().split("T")[0];
 
 function trocarTipo() {
   const tipo = document.getElementById("tipo").value;
@@ -139,6 +134,11 @@ function trocarTipo() {
     tipo === "Receita" ? "block" : "none";
 }
 
+// valida valor (inteiro ou 2 casas decimais com vírgula)
+function validarValor(valor) {
+  return /^\\d+(,\\d{1,2})?$/.test(valor);
+}
+
 async function salvar() {
 
   const tipo = document.getElementById("tipo").value;
@@ -147,20 +147,36 @@ async function salvar() {
     ? document.getElementById("categoriaDespesa").value
     : document.getElementById("categoriaReceita").value;
 
-  const rawDate = document.getElementById("data").value;
+  const valorInput = document.getElementById("valor").value;
 
-  const dataFinal = rawDate
-    ? rawDate
-    : new Date().toISOString().split("T")[0];
+  // validações
+  if (!validarValor(valorInput)) {
+    alert("Valor inválido. Use formato 0,00");
+    return;
+  }
+
+  const valorNumerico = parseFloat(valorInput.replace(",", "."));
+
+  if (valorNumerico < 0) {
+    alert("Valor não pode ser negativo");
+    return;
+  }
+
+  const parcelas = parseInt(document.getElementById("parcelas").value);
+
+  if (parcelas < 0) {
+    alert("Parcelas não pode ser negativo");
+    return;
+  }
 
   const data = {
     token: "Desafio2026",
-    data: dataFinal,
+    data: document.getElementById("data").value,
     tipo: tipo,
     categoria: categoria,
     descricao: document.getElementById("descricao").value,
-    parcelas: document.getElementById("parcelas").value || 1,
-    valor: document.getElementById("valor").value
+    parcelas: parcelas,
+    valor: valorNumerico
   };
 
   const res = await fetch(URL_SCRIPT, {
@@ -171,7 +187,7 @@ async function salvar() {
   const text = await res.text();
 
   if (text === "OK") {
-    alert("Lançamento salvo!");
+    alert("Registro salvo");
   } else {
     alert("Erro: " + text);
   }
