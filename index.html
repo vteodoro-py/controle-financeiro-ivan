@@ -294,7 +294,7 @@
 </div>
 
 <script>
-  const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbyEjKYND3VbIFUC3w_ApiI2YfCR1_uK6Z4atjDUZL6p-Cw6UabHTuwfM5J4CzQUb-1cZw/exec";
+  const URL_SCRIPT = "https://sheetdb.io/api/v1/8cr3vjcldo26h";
   let tipoAtual = "Despesa";
 
   const categoriasDespesa = [
@@ -411,20 +411,24 @@
       : document.getElementById("inputReceita").value;
     if (!categoria) { alert("Selecione uma categoria."); return; }
     const payload = {
-      token: "Desafio2026",
-      data: document.getElementById("data").value,
-      tipo: tipoAtual,
-      categoria,
-      descricao: document.getElementById("descricao").value,
-      parcelas,
-      valor
+      data: [{
+        data: document.getElementById("data").value,
+        tipo: tipoAtual,
+        categoria,
+        descricao: document.getElementById("descricao").value,
+        parcelas,
+        valor
+      }]
     };
     setBtnState("sending");
     try {
-      const res = await fetch(URL_SCRIPT, { method: "POST", body: JSON.stringify(payload) });
-      const text = await res.text();
-      setBtnState(text === "OK" ? "ok" : "err");
-      if (text !== "OK") console.error("Resposta:", text);
+      const res = await fetch(URL_SCRIPT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const json = await res.json();
+      setBtnState(json.created === 1 ? "ok" : "err");
     } catch (e) {
       setBtnState("err");
     }
