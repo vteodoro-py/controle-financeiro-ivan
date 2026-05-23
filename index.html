@@ -294,13 +294,14 @@
 </div>
 
 <script>
-  const URL_SCRIPT = "https://sheetdb.io/api/v1/8cr3vjcldo26h";
+  const SUPABASE_URL = "https://oampajdxqkeyosjgrrko.supabase.co/rest/v1/lancamentos";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9hbXBhamR4cWtleW9zamdycmtvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0OTYyNTEsImV4cCI6MjA5NTA3MjI1MX0.qQk1XcR-EpJ3cH6Oqq43SdvD11ypacDfGr2MtCH-8Jg";
   let tipoAtual = "Despesa";
 
   const categoriasDespesa = [
     "Almoço semana","Aluguel","Apartamento","Barbeiro","Convênio médico",
     "Despesas auto","Empréstimo","Farmácia","Faxineira","Financiamento apto",
-    "IPTU","Luz/Água/Gás/Condomínio","Mercado","Presentes","Restaurante/Delivery",
+    "IPTU","Luz/Água/Gás/Condomínio","Marcado","Presentes","Restaurante/Delivery",
     "Salário MX","Sandy e Marley","Seguro de vida","TV/Celular/Internet",
     "Uber/99/Táxi","Vestuário","Vinícius"
   ];
@@ -411,24 +412,26 @@
       : document.getElementById("inputReceita").value;
     if (!categoria) { alert("Selecione uma categoria."); return; }
     const payload = {
-      data: [{
-        data: document.getElementById("data").value,
-        tipo: tipoAtual,
-        categoria,
-        descricao: document.getElementById("descricao").value,
-        parcelas,
-        valor
-      }]
+      data: document.getElementById("data").value,
+      tipo: tipoAtual,
+      categoria,
+      descricao: document.getElementById("descricao").value,
+      parcelas,
+      valor
     };
     setBtnState("sending");
     try {
-      const res = await fetch(URL_SCRIPT, {
+      const res = await fetch(SUPABASE_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + SUPABASE_KEY,
+          "Prefer": "return=minimal"
+        },
         body: JSON.stringify(payload)
       });
-      const json = await res.json();
-      setBtnState(json.created === 1 ? "ok" : "err");
+      setBtnState(res.status === 201 ? "ok" : "err");
     } catch (e) {
       setBtnState("err");
     }
