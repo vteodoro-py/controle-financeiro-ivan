@@ -331,4 +331,111 @@
       lista.innerHTML = "";
       selectedIndex = -1;
       if (filtradas.length === 0) { lista.classList.remove("open"); return; }
-    
+      filtradas.forEach((op, i) => {
+        const item = document.createElement("div");
+        item.className = "autocomplete-item";
+        item.textContent = op;
+        item.addEventListener("mousedown", e => {
+          e.preventDefault();
+          input.value = op;
+          lista.classList.remove("open");
+        });
+        lista.appendChild(item);
+      });
+      lista.classList.add("open");
+    }
+
+    input.addEventListener("focus", () => renderLista(input.value));
+    input.addEventListener("input", () => renderLista(input.value));
+    input.addEventListener("keydown", e => {
+      const items = lista.querySelectorAll(".autocomplete-item");
+      if (e.key === "ArrowDown") {
+        selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+      } else if (e.key === "ArrowUp") {
+        selectedIndex = Math.max(selectedIndex - 1, 0);
+      } else if (e.key === "Enter" && selectedIndex >= 0) {
+        input.value = items[selectedIndex].textContent;
+        lista.classList.remove("open");
+        return;
+      } else if (e.key === "Escape") {
+        lista.classList.remove("open"); return;
+      }
+      items.forEach((it, i) => it.classList.toggle("selected", i === selectedIndex));
+      if (selectedIndex >= 0) items[selectedIndex].scrollIntoView({ block: "nearest" });
+    });
+    document.addEventListener("click", e => {
+      if (!input.parentElement.contains(e.target)) lista.classList.remove("open");
+    });
+  }
+
+  setupAutocomplete("inputDespesa", "listaDespesa", categoriasDespesa);
+  setupAutocomplete("inputReceita", "listaReceita", categoriasReceita);
+
+  function alterarParcelas(delta) {
+    const input = document.getElementById("parcelas");
+    const atual = parseInt(input.value) || 1;
+    const novo = Math.max(1, atual + delta);
+    input.value = novo;
+    document.getElementById("btnMenos").disabled = novo <= 1;
+  }
+
+  document.getElementById("parcelas").addEventListener("input", function() {
+    const v = parseInt(this.value) || 1;
+    if (v < 1) this.value = 1;
+    document.getElementById("btnMenos").disabled = (parseInt(this.value) || 1) <= 1;
+  });
+
+  // Formatação de valor em tempo real
+  document.getElementById("valor").addEventListener("input", function() {
+    let digits = this.value.replace(/\D/g, "");
+    if (digits === "") { this.value = ""; return; }
+    digits = digits.replace(/^0+/, "") || "0";
+    while (digits.length < 3) digits = "0" + digits;
+    const intPart = digits.slice(0, -2).replace(/^0+/, "") || "0";
+    const decPart = digits.slice(-2);
+    const intFormatted = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    this.value = intFormatted + "," + decPart;
+  });
+
+  function setBtnState(state) {
+    const btn = document.getElementById("btnSalvar");
+    const lbl = document.getElementById("btnLabel");
+    if (state === "sending") { btn.className = "btn sending"; lbl.textContent = "ENVIANDO..."; }
+    else if (state === "ok")  { btn.className = "btn ok";  lbl.textContent = "SALVO!"; setTimeout(() => setBtnState("idle"), 2500); }
+    else if (state === "err") { btn.className = "btn err"; lbl.textContent = "ERRO AO SALVAR"; setTimeout(() => setBtnState("idle"), 2500); }
+    else { btn.className = "btn"; lbl.textContent = "SALVAR"; }
+  }
+
+  async function salvar() {
+    const valorTexto = document.getElementById("valor").value.trim();
+    if (!valorTexto) { alert("Informe o valor."); return; }
+    const valor = parseFloat(valorTexto.replace(/\./g, "").replace(",", "."));
+    if (isNaN(valor) || valor <= 0) { alert("Valor inválido."); return; }
+    const parcelas = parseInt(document.getElementById("parcelas").value) || 1;
+    const categoria = tipoAtual === "Despesa"
+      ? document.getElementById("inputDespesa").value
+      : document.getElementById("inputReceita").value;
+    if (!categoria) { alert("Selecione uma categoria."); return; }
+    const payload = {
+      token: "Desafio2026",
+      data: document.getElementById("data").value,
+      tipo: tipoAtual,
+      categoria,
+      descricao: document.getElementById("descricao").value,
+      parcelas,
+      valor
+    };
+    setBtnState("sending");
+    try {
+      const res = await fetch(URL_SCRIPT, { method: "POST", body: JSON.stringify(payload) });
+      const text = await res.text();
+      setBtnState(text === "OK" ? "ok" : "err");
+      if (text !== "OK") console.error("Resposta:", text);
+    } catch (e) {
+      setBtnState("err");
+    }
+  }
+</script>
+
+</body>
+</html>
