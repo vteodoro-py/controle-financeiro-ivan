@@ -2,201 +2,265 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Controle Financeiro</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle Financeiro — Ivan Teodoro</title>
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0b1220;
-  display: flex;
-  justify-content: center;
-  padding: 30px;
-}
-
-.container {
-  background: #ffffff;
-  width: 460px;
-  border-radius: 14px;
-  padding: 25px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-}
-
-h1 {
-  text-align: center;
-  margin: 0;
-  font-size: 20px;
-  color: #111827;
-}
-
-.subtitle {
-  text-align: center;
-  margin-top: 5px;
-  margin-bottom: 20px;
-  font-size: 13px;
-  color: #6b7280;
-}
-
-label {
-  font-size: 12px;
-  color: #555;
-  margin-top: 12px;
-  display: block;
-}
-
-input, select {
-  width: 100%;
-  padding: 12px;
-  margin-top: 5px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  font-size: 14px;
-  outline: none;
-}
-
-input:focus, select:focus {
-  border-color: #2563eb;
-}
-
-/* remove spinner só do valor se for number futuramente */
-button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 20px;
-  border: none;
-  border-radius: 10px;
-  background: #2563eb;
-  color: white;
-  font-size: 15px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #1d4ed8;
-}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+  .card {
+    background: #fff;
+    width: 100%;
+    max-width: 440px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .header {
+    background: #1e3a8a;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #3b82f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .header-text h1 { color: #fff; font-size: 17px; font-weight: 600; letter-spacing: .3px; }
+  .header-text p  { color: #93c5fd; font-size: 12px; margin-top: 2px; }
+  .body { padding: 1.5rem; }
+  .tipo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.25rem; }
+  .tipo-btn {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1.5px solid #e5e7eb;
+    background: #f9fafb;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: #6b7280;
+    transition: all .15s;
+  }
+  .tipo-btn.active-despesa { background: #fef2f2; border-color: #fca5a5; color: #b91c1c; }
+  .tipo-btn.active-receita { background: #f0fdf4; border-color: #86efac; color: #15803d; }
+  .divider { height: 1px; background: #f3f4f6; margin: 0 0 1.25rem; }
+  .field { margin-bottom: 1rem; }
+  .field label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 6px;
+  }
+  .field input, .field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #111827;
+    background: #fff;
+    outline: none;
+    transition: border-color .15s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .field input:focus, .field select:focus { border-color: #3b82f6; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cat-block { display: none; }
+  .cat-block.visible { display: block; }
+  .btn {
+    width: 100%;
+    padding: 13px;
+    margin-top: 4px;
+    border: none;
+    border-radius: 12px;
+    background: #1e3a8a;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background .15s;
+  }
+  .btn:hover { background: #1d4ed8; }
+  .btn.sending { background: #6b7280; pointer-events: none; }
+  .btn.ok  { background: #15803d; }
+  .btn.err { background: #b91c1c; }
 </style>
 </head>
-
 <body>
 
-<div class="container">
+<div class="card">
+  <div class="header">
+    <div class="avatar">IT</div>
+    <div class="header-text">
+      <h1>Controle financeiro</h1>
+      <p>Ivan Teodoro</p>
+    </div>
+  </div>
 
-<h1>CONTROLE FINANCEIRO</h1>
-<div class="subtitle">Ivan Teodoro</div>
+  <div class="body">
+    <div class="tipo-row">
+      <button class="tipo-btn active-despesa" id="btnDespesa" onclick="setTipo('Despesa')">
+        ↓ Despesa
+      </button>
+      <button class="tipo-btn" id="btnReceita" onclick="setTipo('Receita')">
+        ↑ Receita
+      </button>
+    </div>
 
-<label>Data</label>
-<input type="date" id="data">
+    <div class="divider"></div>
 
-<label>Tipo</label>
-<select id="tipo" onchange="trocarTipo()">
-  <option value="">Selecione</option>
-  <option value="Despesa">Despesa</option>
-  <option value="Receita">Receita</option>
-</select>
+    <div class="field">
+      <label>📅 Data</label>
+      <input type="date" id="data">
+    </div>
 
-<label>Categoria (Despesa)</label>
-<select id="categoriaDespesa">
-  <option>Alimentação</option>
-  <option>Transporte</option>
-  <option>Moradia</option>
-</select>
+    <div class="cat-block visible" id="catDespesa">
+      <div class="field">
+        <label>🏷 Categoria</label>
+        <select id="categoriaDespesa">
+          <option>Almoço semana</option>
+          <option>Aluguel</option>
+          <option>Apartamento</option>
+          <option>Barbeiro</option>
+          <option>Convênio médico</option>
+          <option>Despesas auto</option>
+          <option>Empréstimo</option>
+          <option>Farmácia</option>
+          <option>Faxineira</option>
+          <option>Financiamento apto</option>
+          <option>IPTU</option>
+          <option>Luz/Água/Gás/Condomínio</option>
+          <option>Marcado</option>
+          <option>Presentes</option>
+          <option>Restaurante/Delivery</option>
+          <option>Salário MX</option>
+          <option>Sandy e Marley</option>
+          <option>Seguro de vida</option>
+          <option>TV/Celular/Internet</option>
+          <option>Uber/99/Táxi</option>
+          <option>Vestuário</option>
+          <option>Vinícius</option>
+        </select>
+      </div>
+    </div>
 
-<label>Categoria (Receita)</label>
-<select id="categoriaReceita" style="display:none;">
-  <option>Salário</option>
-  <option>Freelance</option>
-  <option>Investimento</option>
-</select>
+    <div class="cat-block" id="catReceita">
+      <div class="field">
+        <label>🏷 Categoria</label>
+        <select id="categoriaReceita">
+          <option>Aluguel</option>
+          <option>Salário</option>
+        </select>
+      </div>
+    </div>
 
-<label>Descrição</label>
-<input type="text" id="descricao">
+    <div class="field">
+      <label>✏️ Descrição</label>
+      <input type="text" id="descricao" placeholder="Ex: Almoço, Uber...">
+    </div>
 
-<label>Parcelas</label>
-<input type="number" id="parcelas" min="0" value="1">
+    <div class="row2">
+      <div class="field">
+        <label>🔢 Parcelas</label>
+        <input type="number" id="parcelas" min="1" value="1">
+      </div>
+      <div class="field">
+        <label>💲 Valor</label>
+        <input type="text" id="valor" placeholder="10 ou 10,50">
+      </div>
+    </div>
 
-<label>Valor</label>
-<input type="text" id="valor" placeholder="Ex: 10 ou 10,50">
-
-<button onclick="salvar()">Salvar</button>
-
+    <button class="btn" id="btnSalvar" onclick="salvar()">
+      <span id="btnLabel">Salvar registro</span>
+    </button>
+  </div>
 </div>
 
 <script>
+  const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbyEjKYND3VbIFUC3w_ApiI2YfCR1_uK6Z4atjDUZL6p-Cw6UabHTuwfM5J4CzQUb-1cZw/exec";
+  let tipoAtual = "Despesa";
 
-const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbyEjKYND3VbIFUC3w_ApiI2YfCR1_uK6Z4atjDUZL6p-Cw6UabHTuwfM5J4CzQUb-1cZw/exec";
+  document.getElementById("data").value = new Date().toISOString().split("T")[0];
 
-// data automática hoje
-document.getElementById("data").value =
-  new Date().toISOString().split("T")[0];
-
-function trocarTipo() {
-  const tipo = document.getElementById("tipo").value;
-
-  document.getElementById("categoriaDespesa").style.display =
-    tipo === "Despesa" ? "block" : "none";
-
-  document.getElementById("categoriaReceita").style.display =
-    tipo === "Receita" ? "block" : "none";
-}
-
-// valida valor: inteiro ou decimal com vírgula
-function validarValor(valor) {
-  return /^\d+(,\d{1,2})?$/.test(valor);
-}
-
-async function salvar() {
-
-  const tipo = document.getElementById("tipo").value;
-
-  const categoria = tipo === "Despesa"
-    ? document.getElementById("categoriaDespesa").value
-    : document.getElementById("categoriaReceita").value;
-
-  const valorTexto = document.getElementById("valor").value;
-
-  if (!validarValor(valorTexto)) {
-    alert("Valor inválido. Use formato 10 ou 10,50");
-    return;
+  function setTipo(t) {
+    tipoAtual = t;
+    document.getElementById("btnDespesa").className = "tipo-btn" + (t === "Despesa" ? " active-despesa" : "");
+    document.getElementById("btnReceita").className = "tipo-btn" + (t === "Receita" ? " active-receita" : "");
+    document.getElementById("catDespesa").className = "cat-block" + (t === "Despesa" ? " visible" : "");
+    document.getElementById("catReceita").className = "cat-block" + (t === "Receita" ? " visible" : "");
   }
 
-  const valor = parseFloat(valorTexto.replace(",", "."));
+  function validarValor(v) { return /^\d+(,\d{1,2})?$/.test(v); }
 
-  if (valor < 0) {
-    alert("Valor não pode ser negativo");
-    return;
+  function setBtnState(state) {
+    const btn = document.getElementById("btnSalvar");
+    const lbl = document.getElementById("btnLabel");
+    if (state === "sending") { btn.className = "btn sending"; lbl.textContent = "Enviando..."; }
+    else if (state === "ok")  { btn.className = "btn ok";  lbl.textContent = "Salvo com sucesso!"; setTimeout(() => setBtnState("idle"), 2500); }
+    else if (state === "err") { btn.className = "btn err"; lbl.textContent = "Erro ao salvar";     setTimeout(() => setBtnState("idle"), 2500); }
+    else { btn.className = "btn"; lbl.textContent = "Salvar registro"; }
   }
 
-  const parcelas = parseInt(document.getElementById("parcelas").value);
-
-  if (parcelas < 0) {
-    alert("Parcelas não pode ser negativo");
-    return;
+  async function salvar() {
+    const valorTexto = document.getElementById("valor").value.trim();
+    if (!validarValor(valorTexto)) { alert("Valor inválido. Use: 10 ou 10,50"); return; }
+    const valor = parseFloat(valorTexto.replace(",", "."));
+    if (valor < 0) { alert("Valor não pode ser negativo"); return; }
+    const parcelas = parseInt(document.getElementById("parcelas").value);
+    if (parcelas < 1) { alert("Parcelas deve ser pelo menos 1"); return; }
+    const categoria = tipoAtual === "Despesa"
+      ? document.getElementById("categoriaDespesa").value
+      : document.getElementById("categoriaReceita").value;
+    const payload = {
+      token: "Desafio2026",
+      data: document.getElementById("data").value,
+      tipo: tipoAtual,
+      categoria,
+      descricao: document.getElementById("descricao").value,
+      parcelas,
+      valor
+    };
+    setBtnState("sending");
+    try {
+      const res = await fetch(URL_SCRIPT, { method: "POST", body: JSON.stringify(payload) });
+      const text = await res.text();
+      setBtnState(text === "OK" ? "ok" : "err");
+      if (text !== "OK") console.error("Resposta:", text);
+    } catch (e) {
+      setBtnState("err");
+    }
   }
-
-  const data = {
-    token: "Desafio2026",
-    data: document.getElementById("data").value,
-    tipo: tipo,
-    categoria: categoria,
-    descricao: document.getElementById("descricao").value,
-    parcelas: parcelas,
-    valor: valor
-  };
-
-  const res = await fetch(URL_SCRIPT, {
-    method: "POST",
-    body: JSON.stringify(data)
-  });
-
-  const text = await res.text();
-
-  if (text === "OK") {
-    alert("Registro salvo");
-  } else {
-    alert("Erro: " + text);
-  }
-}
-
 </script>
 
 </body>
