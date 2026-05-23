@@ -16,16 +16,25 @@ body {
 
 .container {
   background: #ffffff;
-  width: 450px;
+  width: 460px;
   border-radius: 14px;
   padding: 25px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
 
-h2 {
+h1 {
   text-align: center;
-  margin-bottom: 20px;
+  margin: 0;
+  font-size: 20px;
   color: #111827;
+}
+
+.subtitle {
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #6b7280;
 }
 
 label {
@@ -49,13 +58,7 @@ input:focus, select:focus {
   border-color: #2563eb;
 }
 
-/* remove setas do number */
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
+/* remove spinner só do valor se for number futuramente */
 button {
   width: 100%;
   padding: 14px;
@@ -78,7 +81,8 @@ button:hover {
 
 <div class="container">
 
-<h2>Controle Financeiro</h2>
+<h1>CONTROLE FINANCEIRO</h1>
+<div class="subtitle">Ivan Teodoro</div>
 
 <label>Data</label>
 <input type="date" id="data">
@@ -108,10 +112,10 @@ button:hover {
 <input type="text" id="descricao">
 
 <label>Parcelas</label>
-<input type="number" id="parcelas" min="1" value="1">
+<input type="number" id="parcelas" min="0" value="1">
 
 <label>Valor</label>
-<input type="text" id="valor" placeholder="0,00">
+<input type="text" id="valor" placeholder="Ex: 10 ou 10,50">
 
 <button onclick="salvar()">Salvar</button>
 
@@ -121,8 +125,9 @@ button:hover {
 
 const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbyEjKYND3VbIFUC3w_ApiI2YfCR1_uK6Z4atjDUZL6p-Cw6UabHTuwfM5J4CzQUb-1cZw/exec";
 
-// data padrão hoje
-document.getElementById("data").value = new Date().toISOString().split("T")[0];
+// data automática hoje
+document.getElementById("data").value =
+  new Date().toISOString().split("T")[0];
 
 function trocarTipo() {
   const tipo = document.getElementById("tipo").value;
@@ -134,9 +139,9 @@ function trocarTipo() {
     tipo === "Receita" ? "block" : "none";
 }
 
-// valida valor (inteiro ou 2 casas decimais com vírgula)
+// valida valor: inteiro ou decimal com vírgula
 function validarValor(valor) {
-  return /^\\d+(,\\d{1,2})?$/.test(valor);
+  return /^\d+(,\d{1,2})?$/.test(valor);
 }
 
 async function salvar() {
@@ -147,17 +152,16 @@ async function salvar() {
     ? document.getElementById("categoriaDespesa").value
     : document.getElementById("categoriaReceita").value;
 
-  const valorInput = document.getElementById("valor").value;
+  const valorTexto = document.getElementById("valor").value;
 
-  // validações
-  if (!validarValor(valorInput)) {
-    alert("Valor inválido. Use formato 0,00");
+  if (!validarValor(valorTexto)) {
+    alert("Valor inválido. Use formato 10 ou 10,50");
     return;
   }
 
-  const valorNumerico = parseFloat(valorInput.replace(",", "."));
+  const valor = parseFloat(valorTexto.replace(",", "."));
 
-  if (valorNumerico < 0) {
+  if (valor < 0) {
     alert("Valor não pode ser negativo");
     return;
   }
@@ -176,7 +180,7 @@ async function salvar() {
     categoria: categoria,
     descricao: document.getElementById("descricao").value,
     parcelas: parcelas,
-    valor: valorNumerico
+    valor: valor
   };
 
   const res = await fetch(URL_SCRIPT, {
