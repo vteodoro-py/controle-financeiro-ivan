@@ -25,26 +25,10 @@
   }
   .header {
     background: #1e3a8a;
-    padding: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 14px;
+    padding: 1.25rem 1.5rem;
   }
-  .avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: #3b82f6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    font-weight: 600;
-    color: #fff;
-    flex-shrink: 0;
-  }
-  .header-text h1 { color: #fff; font-size: 17px; font-weight: 600; letter-spacing: .3px; }
-  .header-text p  { color: #93c5fd; font-size: 12px; margin-top: 2px; }
+  .header h1 { color: #fff; font-size: 17px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; }
+  .header p  { color: #93c5fd; font-size: 12px; margin-top: 3px; text-transform: uppercase; letter-spacing: .4px; }
   .body { padding: 1.5rem; }
   .tipo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.25rem; }
   .tipo-btn {
@@ -91,9 +75,63 @@
     appearance: none;
   }
   .field input:focus, .field select:focus { border-color: #3b82f6; }
+  .select-wrapper {
+    position: relative;
+  }
+  .select-wrapper select {
+    padding-right: 36px;
+  }
+  .select-wrapper::after {
+    content: "▼";
+    font-size: 10px;
+    color: #9ca3af;
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
   .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .cat-block { display: none; }
   .cat-block.visible { display: block; }
+  .parcelas-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color .15s;
+  }
+  .parcelas-wrapper:focus-within { border-color: #3b82f6; }
+  .parcelas-btn {
+    width: 38px;
+    flex-shrink: 0;
+    background: #f9fafb;
+    border: none;
+    font-size: 18px;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .1s;
+    user-select: none;
+  }
+  .parcelas-btn:hover { background: #f3f4f6; color: #111827; }
+  .parcelas-btn:disabled { color: #d1d5db; cursor: default; background: #f9fafb; }
+  #parcelas {
+    border: none;
+    border-radius: 0;
+    text-align: center;
+    padding: 10px 4px;
+    flex: 1;
+    font-size: 14px;
+    -moz-appearance: textfield;
+  }
+  #parcelas::-webkit-outer-spin-button,
+  #parcelas::-webkit-inner-spin-button { -webkit-appearance: none; }
   .btn {
     width: 100%;
     padding: 13px;
@@ -103,7 +141,8 @@
     background: #1e3a8a;
     color: #fff;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: .5px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -121,11 +160,8 @@
 
 <div class="card">
   <div class="header">
-    <div class="avatar">IT</div>
-    <div class="header-text">
-      <h1>Controle financeiro</h1>
-      <p>Ivan Teodoro</p>
-    </div>
+    <h1>CONTROLE FINANCEIRO</h1>
+    <p>IVAN TEODORO</p>
   </div>
 
   <div class="body">
@@ -141,68 +177,76 @@
     <div class="divider"></div>
 
     <div class="field">
-      <label>📅 Data</label>
+      <label>Data</label>
       <input type="date" id="data">
     </div>
 
     <div class="cat-block visible" id="catDespesa">
       <div class="field">
-        <label>🏷 Categoria</label>
-        <select id="categoriaDespesa">
-          <option>Almoço semana</option>
-          <option>Aluguel</option>
-          <option>Apartamento</option>
-          <option>Barbeiro</option>
-          <option>Convênio médico</option>
-          <option>Despesas auto</option>
-          <option>Empréstimo</option>
-          <option>Farmácia</option>
-          <option>Faxineira</option>
-          <option>Financiamento apto</option>
-          <option>IPTU</option>
-          <option>Luz/Água/Gás/Condomínio</option>
-          <option>Marcado</option>
-          <option>Presentes</option>
-          <option>Restaurante/Delivery</option>
-          <option>Salário MX</option>
-          <option>Sandy e Marley</option>
-          <option>Seguro de vida</option>
-          <option>TV/Celular/Internet</option>
-          <option>Uber/99/Táxi</option>
-          <option>Vestuário</option>
-          <option>Vinícius</option>
-        </select>
+        <label>Categoria</label>
+        <div class="select-wrapper">
+          <select id="categoriaDespesa">
+            <option>Almoço semana</option>
+            <option>Aluguel</option>
+            <option>Apartamento</option>
+            <option>Barbeiro</option>
+            <option>Convênio médico</option>
+            <option>Despesas auto</option>
+            <option>Empréstimo</option>
+            <option>Farmácia</option>
+            <option>Faxineira</option>
+            <option>Financiamento apto</option>
+            <option>IPTU</option>
+            <option>Luz/Água/Gás/Condomínio</option>
+            <option>Marcado</option>
+            <option>Presentes</option>
+            <option>Restaurante/Delivery</option>
+            <option>Salário MX</option>
+            <option>Sandy e Marley</option>
+            <option>Seguro de vida</option>
+            <option>TV/Celular/Internet</option>
+            <option>Uber/99/Táxi</option>
+            <option>Vestuário</option>
+            <option>Vinícius</option>
+          </select>
+        </div>
       </div>
     </div>
 
     <div class="cat-block" id="catReceita">
       <div class="field">
-        <label>🏷 Categoria</label>
-        <select id="categoriaReceita">
-          <option>Aluguel</option>
-          <option>Salário</option>
-        </select>
+        <label>Categoria</label>
+        <div class="select-wrapper">
+          <select id="categoriaReceita">
+            <option>Aluguel</option>
+            <option>Salário</option>
+          </select>
+        </div>
       </div>
     </div>
 
     <div class="field">
-      <label>✏️ Descrição</label>
+      <label>Descrição</label>
       <input type="text" id="descricao" placeholder="Ex: Almoço, Uber...">
     </div>
 
     <div class="row2">
       <div class="field">
-        <label>🔢 Parcelas</label>
-        <input type="number" id="parcelas" min="1" value="1">
+        <label>Parcelas</label>
+        <div class="parcelas-wrapper">
+          <button class="parcelas-btn" id="btnMenos" onclick="alterarParcelas(-1)" disabled>−</button>
+          <input type="number" id="parcelas" min="0" value="1" readonly>
+          <button class="parcelas-btn" onclick="alterarParcelas(1)">+</button>
+        </div>
       </div>
       <div class="field">
-        <label>💲 Valor</label>
-        <input type="text" id="valor" placeholder="10 ou 10,50">
+        <label>Valor</label>
+        <input type="tel" id="valor" inputmode="decimal">
       </div>
     </div>
 
     <button class="btn" id="btnSalvar" onclick="salvar()">
-      <span id="btnLabel">Salvar registro</span>
+      <span id="btnLabel">SALVAR</span>
     </button>
   </div>
 </div>
@@ -221,15 +265,22 @@
     document.getElementById("catReceita").className = "cat-block" + (t === "Receita" ? " visible" : "");
   }
 
+  function alterarParcelas(delta) {
+    const input = document.getElementById("parcelas");
+    const novoValor = Math.max(0, parseInt(input.value) + delta);
+    input.value = novoValor;
+    document.getElementById("btnMenos").disabled = novoValor <= 0;
+  }
+
   function validarValor(v) { return /^\d+(,\d{1,2})?$/.test(v); }
 
   function setBtnState(state) {
     const btn = document.getElementById("btnSalvar");
     const lbl = document.getElementById("btnLabel");
-    if (state === "sending") { btn.className = "btn sending"; lbl.textContent = "Enviando..."; }
-    else if (state === "ok")  { btn.className = "btn ok";  lbl.textContent = "Salvo com sucesso!"; setTimeout(() => setBtnState("idle"), 2500); }
-    else if (state === "err") { btn.className = "btn err"; lbl.textContent = "Erro ao salvar";     setTimeout(() => setBtnState("idle"), 2500); }
-    else { btn.className = "btn"; lbl.textContent = "Salvar registro"; }
+    if (state === "sending") { btn.className = "btn sending"; lbl.textContent = "ENVIANDO..."; }
+    else if (state === "ok")  { btn.className = "btn ok";  lbl.textContent = "SALVO!"; setTimeout(() => setBtnState("idle"), 2500); }
+    else if (state === "err") { btn.className = "btn err"; lbl.textContent = "ERRO AO SALVAR"; setTimeout(() => setBtnState("idle"), 2500); }
+    else { btn.className = "btn"; lbl.textContent = "SALVAR"; }
   }
 
   async function salvar() {
@@ -238,7 +289,6 @@
     const valor = parseFloat(valorTexto.replace(",", "."));
     if (valor < 0) { alert("Valor não pode ser negativo"); return; }
     const parcelas = parseInt(document.getElementById("parcelas").value);
-    if (parcelas < 1) { alert("Parcelas deve ser pelo menos 1"); return; }
     const categoria = tipoAtual === "Despesa"
       ? document.getElementById("categoriaDespesa").value
       : document.getElementById("categoriaReceita").value;
