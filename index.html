@@ -425,11 +425,23 @@
     this.value = intFormatted + "," + decPart;
   });
 
+  function resetFormulario() {
+    document.getElementById("descricao").value = "";
+    document.getElementById("valor").value = "";
+    document.getElementById("parcelas").value = "1";
+    document.getElementById("btnMenos").disabled = true;
+    document.getElementById("data").value = new Date().toISOString().split("T")[0];
+    document.getElementById("inputDespesa").value = "";
+    document.getElementById("inputReceita").value = "";
+    setPagamento("Credito");
+    setTipo("Despesa");
+  }
+
   function setBtnState(state) {
     const btn = document.getElementById("btnSalvar");
     const lbl = document.getElementById("btnLabel");
     if (state === "sending") { btn.className = "btn sending"; lbl.textContent = "ENVIANDO..."; }
-    else if (state === "ok")  { btn.className = "btn ok";  lbl.textContent = "SALVO!"; setTimeout(() => setBtnState("idle"), 2500); }
+    else if (state === "ok")  { btn.className = "btn ok";  lbl.textContent = "SALVO!"; resetFormulario(); setTimeout(() => setBtnState("idle"), 2500); }
     else if (state === "err") { btn.className = "btn err"; lbl.textContent = "ERRO AO SALVAR"; setTimeout(() => setBtnState("idle"), 2500); }
     else { btn.className = "btn"; lbl.textContent = "SALVAR"; }
   }
